@@ -44,6 +44,13 @@ app.post("/", async (req, res) => {
   );
 });
 
+app.get("/product/:id", (req, res) => {
+  productId = req.params.id;
+  db.get("SELECT * FROM products WHERE id = ?", [productId], (err, rows) => {
+    res.render("product", { product: rows });
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });

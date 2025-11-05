@@ -13,6 +13,8 @@
         <input
           type="text"
           name="link"
+          placeholder="Enter the Amazon Product URL"
+          required
           class="w-full p-3 rounded bg-gray-700 text-white placeholder-gray-400 resize-none"
         />
         <input
@@ -25,24 +27,20 @@
       <div class="flex flex-wrap gap-4">
         <% products.forEach(product => { %>
         <a
-          href="<%=product.link%>"
-          class="bg-blue-900 p-6 rounded-lg shadow-md w-48 flex flex-col items-center"
+          href="/product/<%=product.id%>"
+          class="bg-blue-900 p-4 rounded-lg shadow-md w-48 flex flex-col items-center"
         >
+          <img src="<%=product.image%>" class="rounded-lg h-32" />
           <ul class="line-clamp-2">
             <%=product.name%>
           </ul>
           <ul>
             <%=product.price%>
           </ul>
-          <br />
-          <img
-            src="<%=product.image%>"
-            class="rounded-lg"
-            style="height: 50%"
-          />
-          <% })} %>
         </a>
+        <% }) %>
       </div>
+      <% } %>
     </div>
   </body>
 </html>

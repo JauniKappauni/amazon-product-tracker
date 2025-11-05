@@ -10,5 +10,17 @@
       <input type="text" name="link" />
       <input type="submit" />
     </form>
+    <% if(products) { %> <% products.forEach(product => { %>
+    <ul>
+      <%=product.name%>
+    </ul>
+    <ul>
+      <%=product.price%>
+    </ul>
+    <ul>
+      <%=product.link%>
+    </ul>
+    <img src="<%=product.image%>" />
+    <% })} %>
   </body>
 </html>

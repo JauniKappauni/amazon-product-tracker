@@ -4,23 +4,45 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <form action="/" method="post">
-      <input type="text" name="link" />
-      <input type="submit" />
-    </form>
-    <% if(products) { %> <% products.forEach(product => { %>
-    <ul>
-      <%=product.name%>
-    </ul>
-    <ul>
-      <%=product.price%>
-    </ul>
-    <ul>
-      <%=product.link%>
-    </ul>
-    <img src="<%=product.image%>" />
-    <% })} %>
+  <body class="bg-gray-900 text-white">
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md max-w-7xl mx-auto mt-10">
+      <h1 class="text-4xl text-center mb-6">Amazon Product Tracker</h1>
+      <form action="/" method="post" class="mb-4">
+        <input
+          type="text"
+          name="link"
+          class="w-full p-3 rounded bg-gray-700 text-white placeholder-gray-400 resize-none"
+        />
+        <input
+          type="submit"
+          class="bg-blue-600 hover:bg-blue-700 mt-2 px-4 py-2 rounded"
+          value="Scrape"
+        />
+      </form>
+      <% if(products) { %>
+      <div class="flex flex-wrap gap-4">
+        <% products.forEach(product => { %>
+        <a
+          href="<%=product.link%>"
+          class="bg-blue-900 p-6 rounded-lg shadow-md w-48 flex flex-col items-center"
+        >
+          <ul class="line-clamp-2">
+            <%=product.name%>
+          </ul>
+          <ul>
+            <%=product.price%>
+          </ul>
+          <br />
+          <img
+            src="<%=product.image%>"
+            class="rounded-lg"
+            style="height: 50%"
+          />
+          <% })} %>
+        </a>
+      </div>
+    </div>
   </body>
 </html>

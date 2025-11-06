@@ -44,6 +44,22 @@ app.post("/", async (req, res) => {
   );
 });
 
+async function checkPriceDelta() {
+  db.all("SELECT link FROM products", async (err, rows) => {
+    for (let i = 0; i < rows.length; i++) {
+      const link = rows[i].link;
+      const response = await axios.get(link);
+      const $ = cheerio.load(response.data);
+      const priceWhole = $(".a-price-whole").first().text();
+      const priceFraction = $(".a-price-fraction").first().text();
+      const priceSymbol = $(".a-price-symbol").first().text();
+      const price = priceWhole + priceFraction + priceSymbol;
+      db.run("UPDATE products SET price = ? WHERE link = ?", [price, link]);
+      console.log("updated to " + price);
+    }
+  });
+}
+
 app.get("/product/:id", (req, res) => {
   productId = req.params.id;
   db.get("SELECT * FROM products WHERE id = ?", [productId], (err, rows) => {
@@ -53,4 +69,5 @@ app.get("/product/:id", (req, res) => {
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
+  setInterval(checkPriceDelta, 60 * 1000);
 });

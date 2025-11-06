@@ -45,22 +45,27 @@ app.post("/", async (req, res) => {
 });
 
 async function checkPriceDelta() {
-  db.all("SELECT price, link FROM products", async (err, rows) => {
+  db.all("SELECT name, price, link FROM products", async (err, rows) => {
     for (let i = 0; i < rows.length; i++) {
-      const link = rows[i].link;
-      const oldPrice = rows[i].price;
-      const response = await axios.get(link);
-      const $ = cheerio.load(response.data);
-      const priceWhole = $(".a-price-whole").first().text();
-      const priceFraction = $(".a-price-fraction").first().text();
-      const priceSymbol = $(".a-price-symbol").first().text();
-      const price = priceWhole + priceFraction + priceSymbol;
-      if (oldPrice == price) {
-        console.log("No price change");
-        continue;
+      try {
+        const link = rows[i].link;
+        const oldPrice = rows[i].price;
+        const name = rows[i].name;
+        const response = await axios.get(link);
+        const $ = cheerio.load(response.data);
+        const priceWhole = $(".a-price-whole").first().text();
+        const priceFraction = $(".a-price-fraction").first().text();
+        const priceSymbol = $(".a-price-symbol").first().text();
+        const price = priceWhole + priceFraction + priceSymbol;
+        if (oldPrice == price) {
+          console.log("No price change for " + name.slice(0, 10));
+          continue;
+        }
+        db.run("UPDATE products SET price = ? WHERE link = ?", [price, link]);
+        console.log("updated " + name.slice(0, 10) + " to " + price);
+      } catch (err) {
+        console.error("You probably got rate limited or got another error rn");
       }
-      db.run("UPDATE products SET price = ? WHERE link = ?", [price, link]);
-      console.log("updated to " + price);
     }
   });
 }
